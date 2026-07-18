@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resendApiKey = process.env.RESEND_API_KEY;
+const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,6 +28,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "Message is too short. Please provide more details." },
         { status: 400 }
+      );
+    }
+
+    if (!resend) {
+      return NextResponse.json(
+        { error: "Email service is not configured yet. Please contact the site owner." },
+        { status: 503 }
       );
     }
 
