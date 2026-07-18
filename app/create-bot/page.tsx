@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,14 +17,25 @@ import {
 import { Loader2, CheckCircle2, Bot, Upload } from "lucide-react";
 
 export default function CreateBotPage() {
+  const router = useRouter();
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [ownerEmail, setOwnerEmail] = useState("");
   const [result, setResult] = useState<{
     botUsername?: string;
     webhookUrl?: string;
     instructions?: string;
   }>({});
+
+  useEffect(() => {
+    const email = localStorage.getItem("botworks_paid_email");
+    if (!email) {
+      router.push("/checkout");
+      return;
+    }
+    setOwnerEmail(email);
+  }, [router]);
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0] || null;
@@ -36,6 +48,7 @@ export default function CreateBotPage() {
     setErrorMessage("");
 
     const formData = new FormData(event.currentTarget);
+    formData.set("ownerEmail", ownerEmail);
 
     try {
       const response = await fetch("/api/create-bot", {
@@ -96,6 +109,8 @@ export default function CreateBotPage() {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
+                <input type="hidden" name="ownerEmail" value={ownerEmail} />
+
                 <div className="space-y-2">
                   <Label htmlFor="businessName">Business name</Label>
                   <Input

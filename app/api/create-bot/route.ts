@@ -7,6 +7,7 @@ export async function POST(request: NextRequest) {
     const token = formData.get("token") as string;
     const businessName = formData.get("businessName") as string;
     const instructions = (formData.get("instructions") as string) || "";
+    const ownerEmail = (formData.get("ownerEmail") as string) || "";
     const policyFile = formData.get("policy") as File | null;
 
     if (!token || !businessName || !policyFile) {
@@ -89,6 +90,7 @@ export async function POST(request: NextRequest) {
       instructions,
       username,
       webhookUrl,
+      ownerEmail,
     });
 
     return NextResponse.json({
