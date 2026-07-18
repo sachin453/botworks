@@ -18,11 +18,17 @@ import { Loader2, CheckCircle2, Bot, Upload } from "lucide-react";
 export default function CreateBotPage() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [result, setResult] = useState<{
     botUsername?: string;
     webhookUrl?: string;
     instructions?: string;
   }>({});
+
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0] || null;
+    setSelectedFile(file);
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -147,8 +153,19 @@ export default function CreateBotPage() {
                       accept=".txt,text/plain"
                       required
                       className="hidden"
+                      onChange={handleFileChange}
                     />
                   </div>
+                  {selectedFile && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-3 text-sm text-primary flex items-center gap-2"
+                    >
+                      <CheckCircle2 className="size-4" />
+                      Selected: {selectedFile.name} ({(selectedFile.size / 1024).toFixed(1)} KB)
+                    </motion.p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
