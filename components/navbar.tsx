@@ -12,6 +12,7 @@ const navLinks = [
   { href: "#pricing", label: "Pricing" },
   { href: "#faq", label: "FAQ" },
   { href: "#contact", label: "Contact" },
+  { href: "/create-bot", label: "Create bot" },
 ];
 
 export function Navbar() {
@@ -40,10 +41,10 @@ export function Navbar() {
 
         <div className="hidden md:flex items-center gap-3">
           <Button variant="outline" size="sm" asChild>
-            <Link href="#contact">Get in touch</Link>
+            <Link href="/create-bot">Create bot</Link>
           </Button>
           <Button size="sm" asChild>
-            <Link href="#pricing">View pricing</Link>
+            <Link href="#contact">Get in touch</Link>
           </Button>
         </div>
 
@@ -66,8 +67,11 @@ export function Navbar() {
                   {link.label}
                 </Link>
               ))}
+              <Button variant="outline" asChild onClick={() => setOpen(false)}>
+                <Link href="/create-bot">Create bot</Link>
+              </Button>
               <Button asChild onClick={() => setOpen(false)}>
-                <Link href="#pricing">View pricing</Link>
+                <Link href="#contact">Get in touch</Link>
               </Button>
             </div>
           </SheetContent>
