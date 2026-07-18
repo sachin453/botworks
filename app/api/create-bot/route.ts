@@ -1,17 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-
-// In-memory storage. Replace with a database in production.
-export const BOT_STORAGE = new Map<
-  string,
-  {
-    token: string;
-    businessName: string;
-    policy: string;
-    instructions: string;
-    username: string;
-    webhookUrl: string;
-  }
->();
+import { createBot } from "@/lib/db";
 
 export async function POST(request: NextRequest) {
   try {
@@ -93,8 +81,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Store bot config in memory (replace with database in production)
-    BOT_STORAGE.set(username, {
+    // Store bot config in database
+    await createBot({
       token,
       businessName,
       policy,
@@ -118,6 +106,3 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export function getBotConfig(username: string) {
-  return BOT_STORAGE.get(username);
-}

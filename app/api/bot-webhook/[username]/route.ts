@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { BOT_STORAGE } from "../../create-bot/route";
+import { getBotByUsername } from "@/lib/db";
 
 interface TelegramMessage {
   message?: {
@@ -13,7 +13,7 @@ export async function POST(
   { params }: { params: Promise<{ username: string }> }
 ) {
   const { username } = await params;
-  const config = BOT_STORAGE.get(username);
+  const config = await getBotByUsername(username);
 
   if (!config) {
     return NextResponse.json({ error: "Bot not found" }, { status: 404 });
