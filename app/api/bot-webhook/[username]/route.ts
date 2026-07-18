@@ -51,14 +51,23 @@ export async function POST(
     const llmApiUrl = process.env.LLM_API_URL || "http://localhost:8080/v1/chat/completions";
     const llmApiKey = process.env.LLM_API_KEY || "";
     const llmModel = process.env.LLM_MODEL || "gemma-4-4b-it";
+    const siteUrl = process.env.SITE_URL || "https://botworks.onrender.com";
 
     const systemPrompt = buildSystemPrompt(config.businessName, config.policy, config.instructions);
+
+    const isOpenRouter = llmApiUrl.includes("openrouter.ai");
 
     const response = await fetch(llmApiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         ...(llmApiKey ? { Authorization: `Bearer ${llmApiKey}` } : {}),
+        ...(isOpenRouter
+          ? {
+              "HTTP-Referer": siteUrl,
+              "X-Title": "BotWorks",
+            }
+          : {}),
       },
       body: JSON.stringify({
         model: llmModel,
