@@ -112,6 +112,22 @@ export default function CreateBotPage() {
                 </div>
 
                 <div className="space-y-2">
+                  <Label htmlFor="publicUrl">
+                    Public webhook URL{" "}
+                    <span className="text-muted-foreground">(optional)</span>
+                  </Label>
+                  <Input
+                    id="publicUrl"
+                    name="publicUrl"
+                    placeholder="https://your-app.ngrok-free.app"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Required for local testing. Use an HTTPS tunnel like ngrok.
+                    In production this is detected automatically.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
                   <Label htmlFor="policy">Policy document (.txt)</Label>
                   <div className="rounded-lg border border-dashed border-input p-6">
                     <label

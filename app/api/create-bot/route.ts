@@ -54,10 +54,19 @@ export async function POST(request: NextRequest) {
 
     const username = meData.result.username;
 
-    // Build public webhook URL from request
-    const host = request.headers.get("host") || "localhost:3000";
-    const protocol = host.startsWith("localhost") ? "http" : "https";
-    const webhookUrl = `${protocol}://${host}/api/bot-webhook/${username}`;
+    // Build public webhook URL
+    const publicUrl = (formData.get("publicUrl") as string)?.trim();
+    let webhookBase: string;
+
+    if (publicUrl) {
+      webhookBase = publicUrl.replace(/\/$/, "");
+    } else {
+      const host = request.headers.get("host") || "localhost:3000";
+      const protocol = host.startsWith("localhost") ? "http" : "https";
+      webhookBase = `${protocol}://${host}`;
+    }
+
+    const webhookUrl = `${webhookBase}/api/bot-webhook/${username}`;
 
     // Set webhook on Telegram
     const webhookResponse = await fetch(
